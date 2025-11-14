@@ -1,0 +1,151 @@
+ID,condition,label,climbing_experience,kilterboard_experience,boulders_grade,kilterboard_grade,hangboard_grade,baseline_grade,tries,success,pd_pre,pd_post
+1,ABC,A,3+ years,2+ times a week,Purple (V3),V5,V6,V4,Flash attempt,1,Hard,Fair
+1,ABC,B,3+ years,2+ times a week,Purple (V3),V5,V6,V4,Not sent,0,Hard,Very hard
+1,ABC,C,3+ years,2+ times a week,Purple (V3),V5,V6,V4,Not sent,0,Hard,Hard
+2,BCA,B,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V4 ,V3,Not sent,0,Hard,Fair
+2,BCA,C,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V4 ,V3,Flash attempt,1,Hard,Easy
+2,BCA,A,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V4 ,V3,Flash attempt,1,Very hard,Fair
+3,CBA,C,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V1 ,V2,Not sent,0,Hard,Hard
+3,CBA,B,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V1,V2,Flash attempt,1,Easy,Fair
+3,CBA,A,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V1,V2,Flash attempt,1,Hard,Easy
+4,ACB,A,1-3 years,2+ times a week,Black (V5),V5,V6,V5,Flash attempt,1,Easy,Fair
+4,ACB,C,1-3 years,2+ times a week,Black (V5),V5,V6,V5,Flash attempt,1,Very easy,Very easy
+4,ACB,B,1-3 years,2+ times a week,Black (V5),V5,V6,V5,Flash attempt,1,Easy,Easy
+5,BCA,B,3+ years,Once in a while,Red (V4),V4,V8 ,V5,Flash attempt,1,Fair,Hard
+5,BCA,C,3+ years,Once in a while,Red (V4),V4,V8 ,V5,Flash attempt,1,Fair,Fair
+5,BCA,A,3+ years,Once in a while,Red (V4),V4,V8 ,V5,Flash attempt,1,Hard,Hard
+6,ACB,A,3+ years,Once in a while,Black (V5),V6,V10,V6,Not sent,0,Fair,Hard
+6,ACB,C,3+ years,Once in a while,Black (V5),V6,V10,V6,Not sent,0,Easy,Fair
+6,ACB,B,3+ years,Once in a while,Black (V5),V6,V10,V6,Not sent,0,Fair,Fair
+7,CAB,C,3+ years,Never tried it,Purple (V3),I don't Kilterboard,V9,V3,Flash attempt,1,Fair,Fair
+7,CAB,A,3+ years,Never tried it,Purple (V3),I don't Kilterboard,V9,V3,Flash attempt,1,Fair,Easy
+7,CAB,B,3+ years,Never tried it,Purple (V3),I don't Kilterboard,V9,V3,Flash attempt,1,Easy,Fair
+8,ABC,A,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V7,V4,Flash attempt,1,Fair,Very hard
+8,ABC,B,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V7,V4,Flash attempt,1,Easy,Easy
+8,ABC,C,6-12 months,Never tried it,Purple (V3),I don't Kilterboard,V7,V4,Flash attempt,1,Easy,Fair
+9,ABC,A,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V4 ,V4,Flash attempt,1,Easy,Fair
+9,ABC,B,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V4 ,V4,Not sent,0,Easy,Hard
+9,ABC,C,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V4 ,V4,Not sent,0,Fair,Fair
+10,CBA,C,3+ years,Once in a while,Pink (V7+),I don't Kilterboard,V15,V11,Flash attempt,1,Hard,Fair
+10,CBA,B,3+ years,Once in a while,Pink (V7+),I don't Kilterboard,V15,V11,Not sent,0,Hard,Hard
+10,CBA,A,3+ years,Once in a while,Pink (V7+),I don't Kilterboard,V15,V11,Flash attempt,1,Very hard,Fair
+11,CBA,C,3+ years,Once in a while,Purple (V3),V4,V5 ,V4,Not sent,0,Fair,Fair
+11,CBA,B,3+ years,Once in a while,Purple (V3),V4,V5,V4,Not sent,0,Easy,Easy
+11,CBA,A,3+ years,Once in a while,Purple (V3),V4,V5,V4,Not sent,0,Hard,Hard
+12,ACB,A,1-3 years,Once in a while,Blue (V2),I don't Kilterboard,V5,V2,Not sent,0,Hard,Hard
+12,ACB,C,1-3 years,Once in a while,Blue (V2),I don't Kilterboard,V5,V2,Not sent,0,Fair,Fair
+12,ACB,B,1-3 years,Once in a while,Blue (V2),I don't Kilterboard,V5,V2,Not sent,0,Easy,Fair
+13,CBA,C,1-3 years,Once in a while,Red (V4),I don't Kilterboard,V5,V5,Flash attempt,1,Fair,Fair
+13,CBA,B,1-3 years,Once in a while,Red (V4),I don't Kilterboard,V5,V5,Not sent,0,Fair,Hard
+13,CBA,A,1-3 years,Once in a while,Red (V4),I don't Kilterboard,V5,V5,Not sent,0,Hard,Hard
+14,BAC,B,1-3 years,Never tried it,Blue (V2),I don't Kilterboard,V4 ,V2,Flash attempt,1,Hard,Hard
+14,BAC,A,1-3 years,Never tried it,Blue (V2),I don't Kilterboard,V4 ,V2,Not sent,0,Hard,Very hard
+14,BAC,C,1-3 years,Never tried it,Blue (V2),I don't Kilterboard,V4 ,V2,Not sent,0,Hard,Hard
+15,CAB,C,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V7,V3,Flash attempt,1,Fair,Fair
+15,CAB,A,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V7,V3,Flash attempt,1,Fair,Fair
+15,CAB,B,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V7,V3,Not sent,0,Hard,Very hard
+16,CAB,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Not sent,0,Fair,Hard
+16,CAB,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Hard,Easy
+16,CAB,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Second attempt,1,Very easy,Easy
+17,ACB,A,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V5,V4,Flash attempt,1,Hard,Hard
+17,ACB,C,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V5,V4,Flash attempt,1,Fair,Fair
+17,ACB,B,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V5,V4,Flash attempt,1,Fair,Fair
+18,BAC,B,1-3 years,1 time a week,Red (V4),V5,V5,V5,Not sent,0,Fair,Hard
+18,BAC,A,1-3 years,1 time a week,Red (V4),V5,V5,V5,Flash attempt,1,Fair,Fair
+18,BAC,C,1-3 years,1 time a week,Red (V4),V5,V5,V5,Not sent,0,Fair,Hard
+19,CBA,C,6-12 months,Once in a while,Purple (V3),I don't Kilterboard,V8,V6,Second attempt,1,Hard,Hard
+19,CBA,B,6-12 months,Once in a while,Purple (V3),I don't Kilterboard,V8,V6,Not sent,0,Hard,Very hard
+19,CBA,A,6-12 months,Once in a while,Purple (V3),I don't Kilterboard,V8,V6,Not sent,0,Very hard,Very hard
+20,CBA,C,3+ years,Once in a while,Black (V6),V6,V7,V6,Not sent,0,Fair,Hard
+20,CBA,B,3+ years,Once in a while,Black (V6),V6,V7,V6,Not sent,0,Hard,Very hard
+20,CBA,A,3+ years,Once in a while,Black (V6),V6,V7,V6,Not sent,0,Very hard,Fair
+21,BAC,B,6-12 months,Never tried it,Blue (V2),I don't Kilterboard,V4 ,V2,Not sent,0,Easy,Very hard
+21,BAC,A,6-12 months,Never tried it,Blue (V2),I don't Kilterboard,V4 ,V2,Flash attempt,1,Hard,Easy
+21,BAC,C,6-12 months,Never tried it,Blue (V2),I don't Kilterboard,V4 ,V2,Not sent,0,Easy,Hard
+22,CAB,C,1-3 years,Never tried it,Blue (V2),I don't Kilterboard,V3 ,V2,Flash attempt,1,Fair,Easy
+22,CAB,A,1-3 years,Never tried it,Blue (V2),I don't Kilterboard,V3 ,V2,Flash attempt,1,Hard,Easy
+22,CAB,B,1-3 years,Never tried it,Blue (V2),I don't Kilterboard,V3 ,V2,Flash attempt,1,Easy,Easy
+23,BCA,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V3,V1,Not sent,0,Easy,Fair
+23,BCA,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V3,V1,Flash attempt,1,Fair,Easy
+23,BCA,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V3,V1,Flash attempt,1,Fair,Fair
+24,CAB,C,0-6 months,Once in a while,Blue (V2),V2,V3,V3,Flash attempt,1,Easy,Hard
+24,CAB,A,0-6 months,Once in a while,Blue (V2),V2,V3,V3,Not sent,0,Very hard,Very hard
+24,CAB,B,0-6 months,Once in a while,Blue (V2),V2,V3,V3,Not sent,0,Easy,Hard
+25,CBA,C,3+ years,2+ times a week,Black (V5),V8,V9,V8,Not sent,0,Fair,Hard
+25,CBA,B,3+ years,2+ times a week,Black (V5),V8,V9,V8,Second attempt,1,Hard,Fair
+25,CBA,A,3+ years,2+ times a week,Black (V5),V8,V9,V8,Second attempt,1,Very hard,Fair
+26,CAB,C,1-3 years,Once in a while,Blue (V2),V3,V6,V3,Flash attempt,1,Fair,Easy
+26,CAB,A,1-3 years,Once in a while,Blue (V2),V3,V6,V3,Flash attempt,1,Hard,Easy
+26,CAB,B,1-3 years,Once in a while,Blue (V2),V3,V6,V3,Flash attempt,1,Fair,Easy
+27,BCA,B,1-3 years,Once in a while,Blue (V2),V1,V2 ,V1,Flash attempt,1,Very easy,Easy
+27,BCA,C,1-3 years,Once in a while,Blue (V2),V1,V2 ,V1,Flash attempt,1,Fair,Easy
+27,BCA,A,1-3 years,Once in a while,Blue (V2),V1,V2 ,V1,Flash attempt,1,Fair,Easy
+28,BCA,B,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V7 ,V3,Flash attempt,1,Fair,Hard
+28,BCA,C,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V7 ,V3,Not sent,0,Fair,Very hard
+28,BCA,A,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V7 ,V3,Flash attempt,1,Hard,Easy
+29,ABC,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Fair,Fair
+29,ABC,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Fair,Easy
+29,ABC,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Easy,Easy
+30,CAB,C,3+ years,2+ times a week,Black (V5),V7,V8,V8,Not sent,0,Hard,Hard
+30,CAB,A,3+ years,2+ times a week,Black (V5),V7,V8,V8,Flash attempt,1,Hard,Fair
+30,CAB,B,3+ years,2+ times a week,Black (V5),V7,V8,V8,Second attempt,1,Very hard,Fair
+31,CAB,C,3+ years,Once in a while,Purple (V3),V3,V6,V3,Second attempt,1,Fair,Hard
+31,CAB,A,3+ years,Once in a while,Purple (V3),V3,V6,V3,Second attempt,1,Hard,Hard
+31,CAB,B,3+ years,Once in a while,Purple (V3),V3,V6,V3,Second attempt,1,Easy,Very easy
+32,CBA,C,0-6 months,Once in a while,Blue (V2),I don't Kilterboard,V0,V0,Flash attempt,1,Fair,Fair
+32,CBA,B,0-6 months,Once in a while,Blue (V2),I don't Kilterboard,V0,V0,Not sent,0,Easy,Fair
+32,CBA,A,0-6 months,Once in a while,Blue (V2),I don't Kilterboard,V0,V0,Not sent,0,Hard,Hard
+33,BAC,B,6-12 months,1 time a week,Purple (V3),V4,V7,V4,Not sent,0,Hard,Hard
+33,BAC,A,6-12 months,2 time a week,Purple (V3),V5,V7,V4,Second attempt,1,Hard,Fair
+33,BAC,C,6-12 months,3 time a week,Purple (V3),V6,V7,V4,Second attempt,1,Very hard,Hard
+34,BAC,B,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V2,V1,Not sent,0,Fair,Very hard
+34,BAC,A,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V2,V1,Not sent,0,Fair,Hard
+34,BAC,C,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V2,V1,Flash attempt,1,Hard,Easy
+35,ACB,A,1-3 years,Once in a while,Red (V4),V4,V5,V4,Not sent,0,Fair,Hard
+35,ACB,C,1-3 years,Once in a while,Red (V4),V4,V5,V4,Flash attempt,1,Hard,Fair
+35,ACB,B,1-3 years,Once in a while,Red (V4),V4,V5,V4,Second attempt,1,Easy,Fair
+36,CBA,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V0,Flash attempt,1,Easy,Easy
+36,CBA,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V0,Second attempt,1,Very easy,Hard
+36,CBA,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V0,Not sent,0,Easy,Hard
+37,ACB,A,1-3 years,Once in a while,Red (V4),V4,V7,V5,Not sent,0,Hard,Hard
+37,ACB,C,1-3 years,Once in a while,Red (V4),V4,V7,V5,Not sent,0,Fair,Hard
+37,ACB,B,1-3 years,Once in a while,Red (V4),V4,V7,V5,Not sent,0,Fair,Very hard
+38,BCA,B,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V4,V3,Flash attempt,1,Hard,Hard
+38,BCA,C,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V4,V3,Flash attempt,1,Very hard,Fair
+38,BCA,A,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V4,V3,Flash attempt,1,Hard,Hard
+39,ABC,A,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V8,V5,Second attempt,1,Fair,Easy
+39,ABC,B,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V8,V5,Flash attempt,1,Easy,Easy
+39,ABC,C,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V8,V5,Second attempt,1,Fair,Fair
+40,CBA,C,3+ years,Once in a while,Blue (V2),I don't Kilterboard,V5,V2,Flash attempt,1,Fair,Hard
+40,CBA,B,3+ years,Once in a while,Blue (V2),I don't Kilterboard,V5,V2,Flash attempt,1,Fair,Easy
+40,CBA,A,3+ years,Once in a while,Blue (V2),I don't Kilterboard,V5,V2,Not sent,0,Hard,Very hard
+41,ACB,A,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V5,V3,Second attempt,1,Hard,Very hard
+41,ACB,C,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V5,V3,Flash attempt,1,Fair,Easy
+41,ACB,B,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V5,V3,Not sent,0,Fair,Very hard
+42,CBA,C,3+ years,Never tried it,Purple (V3),I don't Kilterboard,V6,V3,Not sent,0,Easy,Hard
+42,CBA,B,3+ years,Never tried it,Purple (V3),I don't Kilterboard,V6,V3,Second attempt,1,Fair,Fair
+42,CBA,A,3+ years,Never tried it,Purple (V3),I don't Kilterboard,V6,V3,Flash attempt,1,Hard,Fair
+43,BCA,B,1-3 years,1 time a week,Red (V4),I don't Kilterboard,V9 ,V5,Flash attempt,1,Easy,Fair
+43,BCA,C,1-3 years,2 time a week,Red (V4),I don't Kilterboard,V9 ,V5,Flash attempt,1,Hard,Fair
+43,BCA,A,1-3 years,3 time a week,Red (V4),I don't Kilterboard,V9 ,V5,Not sent,0,Hard,Very hard
+44,CBA,C,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V4 ,V2,Flash attempt,1,Fair,Fair
+44,CBA,B,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V4 ,V2,Flash attempt,1,Easy,Very easy
+44,CBA,A,1-3 years,Once in a while,Purple (V3),I don't Kilterboard,V4 ,V2,Not sent,0,Hard,Very hard
+45,ABC,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V4,V2,Not sent,0,Hard,Hard
+45,ABC,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V4,V2,Flash attempt,1,Fair,Fair
+45,ABC,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V4,V2,Second attempt,1,Hard,Fair
+46,BAC,B,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V0 ,V2,Flash attempt,1,Fair,Fair
+46,BAC,A,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V0 ,V2,Not sent,0,Hard,Very hard
+46,BAC,C,1-3 years,Never tried it,Purple (V3),I don't Kilterboard,V0 ,V2,Flash attempt,1,Hard,Easy
+47,ABC,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V1,V0,Flash attempt,1,Fair,Fair
+47,ABC,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V1,V0,Flash attempt,1,Easy,Easy
+47,ABC,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V1,V0,Flash attempt,1,Fair,Fair
+48,ABC,A,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Not sent,0,Hard,Hard
+48,ABC,B,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Easy,Easy
+48,ABC,C,0-6 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Not sent,0,Fair,Hard
+49,BAC,B,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V5 ,V3,Flash attempt,1,Hard,Easy
+49,BAC,A,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V5 ,V3,Flash attempt,1,Fair,Easy
+49,BAC,C,3+ years,Once in a while,Purple (V3),I don't Kilterboard,V5 ,V3,Flash attempt,1,Very easy,Very easy
+50,BAC,B,6-12 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Easy,Fair
+50,BAC,A,6-12 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Flash attempt,1,Fair,Fair
+50,BAC,C,6-12 months,Never tried it,Blue (V2),I don't Kilterboard,V2,V1,Not sent,0,Easy,Fair
