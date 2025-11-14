@@ -1,0 +1,73 @@
+---
+title: "kilter_analysis"
+output: html_document
+date: "2025-11-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(lme4)
+data <- read.csv("kilter_data.csv")
+```
+
+```{r results='hide', include=FALSE}}
+#rename pd_post and pd_pre values 1-5
+data$pd_pre <- recode(data$pd_pre, "Very Easy" = 1, "Easy" = 2, "Fair" = 3, "Hard" = 4, "Very Hard" = 5)
+data$pd_post <- recode(data$pd_post, "Very Easy" = 1, "Easy" = 2, "Fair" = 3, "Hard" = 4, "Very Hard" = 5)
+
+data$ID <- factor(data$ID)
+data$condition <- factor(data$condition)
+data$label <- factor(data$label)
+data$climbing_experience <- factor(data$climbing_experience)
+data$kilterboard_experience <- factor(data$kilterboard_experience)
+data$boulders_grade <- factor(data$boulders_grade)
+data$kilterboard_grade <- factor(data$kilterboard_grade)
+data$hangboard_grade <- factor(data$hangboard_grade)
+data$baseline_grade <- factor(data$baseline_grade)
+data$tries <- factor(data$tries)
+data$success <- as.logical(data$success)
+data$pd_pre <- as.numeric(data$pd_pre)
+data$pd_post <- as.numeric(data$pd_post)
+
+#rename true and false as 1 and 0
+data$success <- ifelse(data$success == TRUE, 1, 0)
+
+summary(data)
+```
+
+```{r}
+m1 <- glmer(success ~ label + (1 | ID), data = data, family = binomial)
+summary(m1)
+
+m2 <- glmer(success ~ label + condition + (1 | ID), data = data, family = binomial)
+summary(m2)
+
+m3 <- glmer(success ~ label * condition + (1 | ID), data = data, family = binomial)
+summary(m3)
+
+AIC(m1, m2, m3)
+```
+```{r}
+data_filter <- data %>%
+  group_by(ID) %>%
+  mutate(
+    all_succeeded = all(success == TRUE, na.rm = TRUE),
+    all_failed    = all(success == FALSE, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  filter(!(all_succeeded | all_failed)) %>%
+  select(-all_succeeded, -all_failed)
+```
+
+```{r}
+m4 <- glmer(pd_post ~ label + (1 | ID), data = data_filter)
+summary(m4)
+```
+```{r}
+plogis(fixef(m4))
+```
+
