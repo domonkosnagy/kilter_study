@@ -11,13 +11,19 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(ggplot2)
 library(lme4)
+library(dplyr)
+library(tidyr)
+library(car)
+library(afex)
 data <- read.csv("kilter_data.csv")
 ```
 
 ```{r results='hide', include=FALSE}}
 #rename pd_post and pd_pre values 1-5
-data$pd_pre <- recode(data$pd_pre, "Very Easy" = 1, "Easy" = 2, "Fair" = 3, "Hard" = 4, "Very Hard" = 5)
-data$pd_post <- recode(data$pd_post, "Very Easy" = 1, "Easy" = 2, "Fair" = 3, "Hard" = 4, "Very Hard" = 5)
+data$pd_pre <- recode(data$pd_pre, 
+              "'Very easy' = 1; 'Easy' = 2; 'Fair' = 3; 'Hard' = 4; 'Very hard' = 5")
+data$pd_post <- recode(data$pd_post, 
+              "'Very easy' = 1; 'Easy' = 2; 'Fair' = 3; 'Hard' = 4; 'Very hard' = 5")
 
 data$ID <- factor(data$ID)
 data$condition <- factor(data$condition)
@@ -36,22 +42,19 @@ data$pd_post <- as.numeric(data$pd_post)
 #rename true and false as 1 and 0
 data$success <- ifelse(data$success == TRUE, 1, 0)
 
+sum(is.na(data))
 summary(data)
 ```
 
 ```{r}
-m1 <- glmer(success ~ label + (1 | ID), data = data, family = binomial)
-summary(m1)
+data$group <- ifelse(data$baseline %in% c("V0", "V1", "V2", "V3"),
+                     "Beginner",
+                     "Expert")
 
-m2 <- glmer(success ~ label + condition + (1 | ID), data = data, family = binomial)
-summary(m2)
+data$kilter_experience_group <- ifelse(data$kilterboard_experience %in% c("Never tried it"),
+                                       "Beginner",
+                                       "Expert")
 
-m3 <- glmer(success ~ label * condition + (1 | ID), data = data, family = binomial)
-summary(m3)
-
-AIC(m1, m2, m3)
-```
-```{r}
 data_filter <- data %>%
   group_by(ID) %>%
   mutate(
@@ -63,11 +66,416 @@ data_filter <- data %>%
   select(-all_succeeded, -all_failed)
 ```
 
+
+# DESCRIPTIVE STATISTICS
 ```{r}
-m4 <- glmer(pd_post ~ label + (1 | ID), data = data_filter)
-summary(m4)
-```
-```{r}
-plogis(fixef(m4))
+data %>% 
+  group_by(label) %>% 
+  summarise(
+    n = n(),
+    mean_success = mean(success),
+    mean_pd_pre = mean(pd_pre),
+    mean_pd_post = mean(pd_post),
+    sd_pd_pre = sd(pd_pre),
+    sd_pd_post = sd(pd_post)
+  )
+
+data %>% 
+  group_by(climbing_experience) %>%
+  summarise(count = n()/3)
+
+data %>% 
+  group_by(kilterboard_experience) %>%
+  summarise(count = n()/3)
+
+grade_summary <- data %>%
+  group_by(baseline_grade) %>%
+  summarise(count = n() / 3)
+
+# barplot of baseline grades
+grade_summary$baseline_grade <- factor(
+  grade_summary$baseline_grade,
+  levels = c("V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V11")
+)
+
+ggplot(grade_summary, aes(x = baseline_grade, y = count)) +
+  geom_col(fill = "lightblue", color = "black") +
+  
+  # Vertical boundary line between V3 and V4
+  geom_vline(aes(xintercept = 4.5, linetype = "Beginner–Expert boundary"),
+             color = "red", size = 1.5) +
+
+  scale_linetype_manual(name = "",
+                        values = c("Beginner–Expert boundary" = "solid")) +
+  
+  labs(
+    title = "Distribution of Baseline Grades (Adjusted Count)",
+    x = "Baseline Grade",
+    y = "Count per Participant (n/3)"
+  ) +
+  ylim(0, 11.5) +
+  theme_minimal() +
+  theme(
+    # Legend inside top-right
+    legend.position = c(0.98, 0.98),
+    legend.justification = c("right", "top"),
+    
+    # Smaller legend box
+    legend.background = element_rect(fill = "white", color = "black", size = 0.1),
+    legend.margin = margin(0, 2, 0, 2),
+    legend.key.size = unit(10, "pt"),
+    legend.spacing = unit(1, "pt"),
+    legend.text = element_text(size = 10)
+  )
+
+
+data %>%
+  group_by(group) %>%
+  summarise(count = n()/3)
 ```
 
+# PERCEIVED DIFFICULTY ANALYSIS
+```{r 1}
+#Is there a significant difference in perceived difficulty between labels? <- yes:)
+group_by(data, label) %>% 
+  summarise(
+    mean_pd_pre = mean(as.numeric(pd_pre), na.rm = TRUE),
+    sd_pd_pre = sd(as.numeric(pd_pre), na.rm = TRUE),
+    mean_pd_post = mean(as.numeric(pd_post), na.rm = TRUE),
+    sd_pd_post = sd(as.numeric(pd_post), na.rm = TRUE)
+)
+#ANOVA
+anova1 <- aov_ez(
+  id = "ID",      
+  dv = "pd_pre",          
+  data = data_filter,
+  within = "label"
+)
+summary(anova1)
+
+anova2 <- aov_ez(
+  id = "ID",      
+  dv = "pd_post",          
+  data = data_filter,
+  within = "label"
+)
+summary(anova2)
+
+# long format for faceting
+data_long <- data %>%
+  pivot_longer(
+    cols = c(pd_pre, pd_post),
+    names_to = "Time",
+    values_to = "PD"
+  ) %>%
+  mutate(Time = factor(Time, levels = c("pd_pre", "pd_post"),
+                       labels = c("Pre", "Post")))
+
+ggplot(data_long, aes(x = label, y = PD, fill = label)) +
+  geom_violin(trim = TRUE, alpha = 0.5) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    shape = 21,   # circle with fill
+    size = 3,
+    color = "black",
+    fill = "white"
+  ) +
+  facet_wrap(~Time, scales = "free_y") +
+  labs(
+    title = "Perceived Difficulty by Label (Pre vs Post)",
+    x = "Label",
+    y = "Perceived Difficulty"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+```{r}
+#assumptions
+#normality
+shapiro.test(residuals(anova1)) 
+shapiro.test(residuals(anova2))
+# so these actually fail because of Likert data but the rest is fine 
+# "Although the Shapiro–Wilk test was significant, this outcome is expected with 1–5 Likert scales, which constrain values to a small set of discrete categories. Visual inspection of Q–Q plots and histograms showed that the residuals were approximately normally distributed without substantial skew or outliers. Levene’s test was non-significant, F(df1, df2) = XX, p > .05, indicating homogeneity of variances. Therefore, the ANOVA results were considered valid."
+
+qqnorm(residuals(anova1)); qqline(residuals(anova1))
+qqnorm(residuals(anova2)); qqline(residuals(anova2))
+
+hist(residuals(anova1))
+hist(residuals(anova2))
+
+#homogeneity of variance
+leveneTest(pd_pre ~ label, data = data)
+leveneTest(pd_post ~ label, data = data)
+```
+
+
+```{r}
+# ANOVA for interaction between expertise and conditions. <- nothing significant but experts rated more conservatiely, i.e. higher pd_pre for B labels, lower pd_pre for A labels
+
+#means
+group_by(data, label, group) %>%
+  summarise(
+    mean_pd_pre = mean(pd_pre, na.rm = TRUE),
+    sd_pd_pre = sd(pd_pre, na.rm = TRUE),
+    mean_pd_post = mean(pd_post, na.rm = TRUE),
+    sd_pd_post = sd(pd_post, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+anova3 <- aov_ez(
+  id = "ID",         
+  dv = "pd_pre",          
+  data = data,
+  within = "label",
+  between = "group"
+)
+summary(anova3)
+
+anova4 <- aov_ez(
+  id = "ID",         
+  dv = "pd_post",          
+  data = data,
+  within = "label",
+  between = "group"
+)
+summary(anova4)
+
+
+data_long2 <- data %>%
+  pivot_longer(
+    cols = c(pd_pre, pd_post),
+    names_to = "Time",
+    values_to = "PD"
+  ) %>%
+  mutate(Time = factor(Time, levels = c("pd_pre", "pd_post"),
+                       labels = c("Pre", "Post")))
+#plot
+ggplot(data_long2, aes(x = label, y = PD, fill = group)) +
+  geom_bar(stat = "summary", fun = "mean", position = position_dodge(width = 0.9), alpha = 0.7) +
+  geom_errorbar(stat = "summary", fun.data = mean_se, 
+                position = position_dodge(width = 0.8), width = 0.2) +
+  facet_wrap(~Time, scales = "free_y") +
+  labs(
+    title = "Perceived Difficulty by Label and Group (Pre vs Post)",
+    x = "Label",
+    y = "Perceived Difficulty"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+#assumptions
+#normality
+shapiro.test(residuals(anova3))
+shapiro.test(residuals(anova4))
+
+qqnorm(residuals(anova3)); qqline(residuals(anova3))
+qqnorm(residuals(anova4)); qqline(residuals(anova4))
+hist(residuals(anova3))
+hist(residuals(anova4))
+
+#homogeneity of variance
+leveneTest(pd_pre ~ label * group, data = data)
+leveneTest(pd_post ~ label * group, data = data)
+```
+
+# OBJECTIVE SUCCESS ANALYSIS 
+# LABEL
+```{r}
+#successful attempts by label
+data_filter %>%
+  group_by(label) %>%
+  summarise(
+    mean_success = mean(success),
+    .groups = "drop"
+  )
+
+ggplot(data_filter, aes(label, success, fill = label)) +
+  stat_summary(fun = mean, geom = "bar") +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", color = "black", width = .2) +
+  ylim (0, 1) +
+  theme_minimal() +
+  labs(
+    title = "Successful Ascents by Label",
+    x = "Label",
+    y = "Proportion of Successful Attempts"
+  ) +
+  theme(legend.position = "none")
+```
+```{r}
+m1 <- glmer(success ~ label + (1 | ID), data_filter, family = binomial)
+summary(m1)
+#convert to probabilities
+pred_logit <- fixef(m1)
+pred_prob <- plogis(pred_logit)
+pred_prob
+```
+
+# LABEL AND GROUP INTERACTION
+```{r}
+#successful attempts by label and group
+data_filter %>%
+  group_by(label, group) %>%
+  summarise(
+    mean_success = mean(success),
+    .groups = "drop"
+  )
+
+ggplot(data_filter, aes(x = label, y = success, fill = group)) +
+  stat_summary(fun = mean, geom = "bar", position = position_dodge(width = 0.9), alpha = 0.7) +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", 
+               position = position_dodge(width = 0.8), width = 0.2, color = "black") +
+  ylim (0, 1) +
+  theme_minimal() +
+  labs(
+    title = "Successful Ascents by Label and Group",
+    x = "Label",
+    y = "Proportion of Successful Attempts"
+  )
+```
+
+```{r}
+m6 <- glmer(success ~ label * group + (1 | ID), data = data_filter, family = binomial)
+summary(m6)
+
+m6b <- glmer(success ~ label * kilter_experience_group + (1 | ID), data = data_filter, family = binomial)
+summary(m6b)
+```
+
+# PERCEIVED DIFFICULTY
+```{r}
+#successful attempts by pd
+pd_pre_summary <- data_filter %>%
+  group_by(pd_pre) %>%
+  summarise(mean_success = mean(success), .groups = "drop") %>%
+  mutate(time = "pre", pd = pd_pre) %>%
+  select(pd, time, mean_success)
+pd_pre_summary
+
+pd_post_summary <- data_filter %>%
+  group_by(pd_post) %>%
+  summarise(mean_success = mean(success), .groups = "drop") %>%
+  mutate(time = "post", pd = pd_post) %>%
+  select(pd, time, mean_success)
+pd_post_summary
+
+# combine
+pd_both <- bind_rows(pd_pre_summary, pd_post_summary)
+
+ggplot(pd_both, aes(x = pd, y = mean_success, color = time)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = 1:5) +
+  ylim(0, 1) +
+  labs(
+    title = "Successful Ascents by Perceived Difficulty",
+    x = "Perceived Difficulty",
+    y = "Proportion of Successful Attempts",
+    color = "Time"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+m4 <- glmer(success ~ pd_pre + (1 | ID), data = data_filter, family = binomial)
+summary(m4)
+m5 <- glmer(success ~ pd_post + (1 | ID), data = data_filter, family = binomial)
+summary(m5) # these 2 are kinda cool, pd_post has significant effect, pre does not
+```
+
+
+# TRYING TO FIND BEST MODEL
+```{r}
+m2 <- glmer(success ~ label + pd_pre + (1 | ID), data = data_filter, family = binomial)
+m2
+m3 <- glmer(success ~ label * pd_pre + (1 | ID), data = data_filter, family = binomial)
+m3
+m7 <- glmer(success ~ label * group + pd_pre + (1 | ID), data = data_filter, family = binomial)
+summary(m7)
+#m8 <- glmer(success ~ label * baseline_grade + (1 | ID), data = data, family = binomial)
+#m8
+#m9 <- glmer(success ~ label * baseline_grade + pd_pre + (1 | ID), data = data, family = binomial)
+#m9
+m10 <- glmer(success ~ label + group + pd_pre + (1 | ID), data = data_filter, family = binomial)
+m10
+
+AIC(m4, m5, m7, m10)
+```
+
+```{r}
+# accuracy 
+data$predicted_success <- predict(m7, type = "response")
+data$predicted_class <- ifelse(data$predicted_success > 0.5, 1, 0)
+confusion_matrix1 <- table(data$success, data$predicted_class)
+confusion_matrix1
+accuracy1 <- sum(diag(confusion_matrix1)) / sum(confusion_matrix1)
+accuracy1
+
+# accuracy data_filter
+data_filter$predicted_success <- predict(m10, type = "response")
+data_filter$predicted_class <- ifelse(data_filter$predicted_success > 0.5, 1, 0)
+confusion_matrix2 <- table(data_filter$success, data_filter$predicted_class)
+confusion_matrix2
+accuracy2 <- sum(diag(confusion_matrix2)) / sum(confusion_matrix2)
+accuracy2
+```
+
+
+```{r}
+# using m7 predictions: probability of success by label
+predictions <- predict(m7, type = "link", se.fit = TRUE)
+
+# convert to probability scale from log-odds
+data$predicted_prob_m7 <- plogis(predictions$fit)
+data$predicted_se_m7 <- predictions$se.fit * dlogis(predictions$fit)
+
+# mean predictions and SEs by label
+pred_points_m7 <- data_filter %>%
+  group_by(label) %>%
+  summarize(
+    mean_pred_m7 = mean(predicted_prob_m7),
+    mean_se_m7 = mean(predicted_se_m7),
+    .groups = "drop"
+  )
+
+# Plot with predicted probabilities jittered
+ggplot(data_filter, aes(x = label, y = predicted_prob_m7, color = group)) +
+  geom_jitter(width = 0.1, height = 0, alpha = 1, size = 2) +
+  geom_point(data = pred_points_m7, aes(x = label, y = mean_pred_m7), 
+             color = "black", size = 3) +
+  # add SE error bars for predicted probabilities
+  geom_errorbar(data = pred_points_m7, 
+                aes(x = label, y = mean_pred_m7, 
+                    ymin = mean_pred_m7 - mean_se_m7, 
+                    ymax = mean_pred_m7 + mean_se_m7),
+                color = "black", width = 0.1, linewidth = 0.5) +
+  labs(x = "Label", 
+       y = "Predicted probability of success", 
+       title = "Probability of Success by Label",
+       subtitle = "Model: m7") +
+  ylim(0, 1) +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data, aes(x = label, y = as.numeric(success), color = group)) +
+  geom_jitter(width = 0.3, height = 0, alpha = 0.7, size = 1) +
+  geom_point(data = pred_points_m7, aes(x = label, y = mean_pred_m7), 
+             color = "black", size = 3) +
+  # add SE error bars for predicted probabilities
+  geom_errorbar(data = pred_points_m7, 
+                aes(x = label, y = mean_pred_m7, 
+                    ymin = mean_pred_m7 - mean_se_m7, 
+                    ymax = mean_pred_m7 + mean_se_m7),
+                color = "black", width = 0.1, linewidth = 0.8) +
+  labs(x = "Label", 
+       y = "Predicted probability of success", 
+       title = "Probability of Success by Label",
+       subtitle = "Model: m7") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
