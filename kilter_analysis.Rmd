@@ -134,7 +134,7 @@ ggplot(grade_summary, aes(x = baseline_grade, y = count)) +
 ```
 
 # PERCEIVED DIFFICULTY ANALYSIS
-```{r 1}
+```{r, H.1.1}
 #Is there a significant difference in perceived difficulty between labels?
 group_by(data_filter, label) %>% 
   summarise(
@@ -233,7 +233,7 @@ leveneTest(pd_post ~ label, data = data)
 ```
 
 
-```{r}
+```{r, H.1.2}
 # ANOVA for interaction between expertise and conditions. <- significant group effect for pd_pre
 
 #means
@@ -340,7 +340,7 @@ leveneTest(abs_pd_difference ~ group, data = data_filter)
 
 # OBJECTIVE SUCCESS ANALYSIS 
 # LABEL
-```{r}
+```{r, H.2.1}
 #successful attempts by label
 data_filter %>%
   group_by(label) %>%
@@ -369,12 +369,10 @@ ggplot(data_filter, aes(label, success, fill = label)) +
   ) +
   theme(legend.position = "none")
 ```
-```{r}
 
-```
 
 # LABEL AND GROUP INTERACTION
-```{r}
+```{r, H.2.2}
 #successful attempts by label and group
 data_filter %>%
   group_by(label, group) %>%
@@ -406,7 +404,7 @@ ggplot(data_filter, aes(x = label, y = success, color = group)) +
 ```
 
 # PERCEIVED DIFFICULTY ON OBJECTIVE PERFORMANCE
-```{r}
+```{r, H.1.3}
 #successful attempts by pd
 pd_pre_summary <- data_filter %>%
   group_by(pd_pre) %>%
@@ -492,10 +490,10 @@ AIC(m1, m2, m3, m4, m10)
 # accuracy of m10
 data_filter$predicted_success <- predict(m10, type = "response")
 data_filter$predicted_class <- ifelse(data_filter$predicted_success > 0.5, 1, 0)
-confusion_matrix2 <- table(data_filter$success, data_filter$predicted_class)
-confusion_matrix2
-accuracy2 <- sum(diag(confusion_matrix2)) / sum(confusion_matrix2)
-accuracy2
+confusion_matrix <- table(data_filter$success, data_filter$predicted_class)
+confusion_matrix
+accuracy <- sum(diag(confusion_matrix2)) / sum(confusion_matrix2)
+accuracy
 
 #inspect misclassifications
 data_filter %>%
@@ -538,3 +536,29 @@ ggplot(data_filter, aes(x = label, y = predicted_prob_m10, color = group)) +
   ylim(0, 1) +
   theme_minimal()
 ```
+```{r}
+set.seed(1)
+# split to train and test sets
+train_indices <- sample(1:nrow(data_filter), size = 0.7 * nrow(data_filter))
+train_data <- data_filter[train_indices, ]
+test_data <- data_filter[-train_indices, ]
+# fit model on train set 
+m10_train <- glm(success ~ label + group + pd_pre + pd_post, 
+                 data = train_data, family = binomial)
+# predict on train set
+train_data$predicted_success <- predict(m10_train, newdata = train_data, type = "response")
+train_data$predicted_class <- ifelse(train_data$predicted_success > 0.5, 1, 0)
+confusion_matrix_train <- table(train_data$success, train_data$predicted_class)
+confusion_matrix_train
+accuracy_train <- sum(diag(confusion_matrix_train)) / sum(confusion_matrix_train)
+accuracy_train
+# predict on test set
+test_data$predicted_success <- predict(m10_train, newdata = test_data, type = "response")
+test_data$predicted_class <- ifelse(test_data$predicted_success > 0.5, 1, 0)
+confusion_matrix_test <- table(test_data$success, test_data$predicted_class)
+confusion_matrix_test
+accuracy_test <- sum(diag(confusion_matrix_test)) / sum(confusion_matrix_test)
+accuracy_test
+```
+
+
