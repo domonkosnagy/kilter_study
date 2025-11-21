@@ -133,8 +133,8 @@ ggplot(grade_summary, aes(x = baseline_grade, y = count)) +
   )
 ```
 
-# PERCEIVED DIFFICULTY ANALYSIS
-```{r, H.1.1}
+# LABEL EFFECT ON PERCEIVED DIFFICULTY and LABEL + PD_PRE effect on SUCCESS H1
+```{r, H1}
 #Is there a significant difference in perceived difficulty between labels?
 group_by(data_filter, label) %>% 
   summarise(
@@ -231,9 +231,104 @@ hist(residuals(anova2))
 leveneTest(pd_pre ~ label, data = data)
 leveneTest(pd_post ~ label, data = data)
 ```
+```{r}
+#successful attempts by label
+data_filter %>%
+  group_by(label) %>%
+  summarise(
+    mean_success = mean(success),
+    .groups = "drop"
+  )
 
+m1 <- glm(success ~ label, data = data_filter, family = binomial)
+summary(m1)
 
-```{r, H.1.2}
+#convert coefficients to probabilities 
+pred_log_odds <- coef(m1)
+pred_probabilities <- plogis(pred_log_odds)
+pred_probabilities
+
+ggplot(data_filter, aes(label, success, fill = label)) +
+  stat_summary(fun = mean, geom = "bar") +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", color = "black", width = .2) +
+  ylim (0, 1) +
+  theme_minimal() +
+  labs(
+    title = "Successful Ascents by Label",
+    x = "Label",
+    y = "Proportion of Successful Attempts"
+  ) +
+  theme(legend.position = "none")
+```
+
+```{r}
+#successful attempts by pd
+pd_pre_summary <- data_filter %>%
+  group_by(pd_pre) %>%
+  summarise(mean_success = mean(success), .groups = "drop") %>%
+  mutate(time = "pre", pd = pd_pre) %>%
+  select(pd, time, mean_success)
+pd_pre_summary
+
+pd_post_summary <- data_filter %>%
+  group_by(pd_post) %>%
+  summarise(mean_success = mean(success), .groups = "drop") %>%
+  mutate(time = "post", pd = pd_post) %>%
+  select(pd, time, mean_success)
+pd_post_summary
+
+# combine
+pd_both <- bind_rows(pd_pre_summary, pd_post_summary)
+
+ggplot(pd_both, aes(x = pd, y = mean_success, color = time)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = 1:5) +
+  ylim(0, 1) +
+  labs(
+    title = "Successful Ascents by Perceived Difficulty",
+    x = "Perceived Difficulty",
+    y = "Proportion of Successful Attempts",
+    color = "Time"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+m2 <- glm(success ~ pd_pre, data = data_filter, family = binomial)
+summary(m2)
+m3 <- glm(success ~ pd_post, data = data_filter, family = binomial)
+summary(m3) 
+
+# plot both
+pd_values <- data.frame(pd = 1:5)
+predictions_pre <- predict(m3, newdata = data.frame(pd_pre = pd_values$pd), type = "response")
+predictions_post <- predict(m4, newdata = data.frame(pd_post = pd_values$pd), type = "response")
+pd_plot_data <- data.frame(
+  pd = rep(pd_values$pd, 2),
+  predicted_success = c(predictions_pre, predictions_post),
+  time = rep(c("Pre", "Post"), each = nrow(pd_values))
+)
+ggplot(pd_plot_data, aes(x = pd, y = predicted_success, color = time)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = 1:5) +
+  ylim(0, 1) +
+  labs(
+    title = "Predicted Probability of Success by Perceived Difficulty",
+    x = "Perceived Difficulty",
+    y = "Predicted Probability of Success",
+    color = "Time"
+  ) +
+  theme_minimal()
+
+m4 <- glm(success ~ label + pd_pre, data = data_filter, family = binomial)
+m4
+```
+
+# LABEL AND GROUP INTERACTION ON PD H2
+```{r, H.2}
 # ANOVA for interaction between expertise and conditions. <- significant group effect for pd_pre
 
 #means
@@ -338,41 +433,8 @@ hist(data_filter$abs_pd_difference[data_filter$group == "Expert"])
 leveneTest(abs_pd_difference ~ group, data = data_filter)
 ```
 
-# OBJECTIVE SUCCESS ANALYSIS 
-# LABEL
-```{r, H.2.1}
-#successful attempts by label
-data_filter %>%
-  group_by(label) %>%
-  summarise(
-    mean_success = mean(success),
-    .groups = "drop"
-  )
-
-m1 <- glm(success ~ label, data = data_filter, family = binomial)
-summary(m1)
-
-#convert coefficients to probabilities 
-pred_log_odds <- coef(m1)
-pred_probabilities <- plogis(pred_log_odds)
-pred_probabilities
-
-ggplot(data_filter, aes(label, success, fill = label)) +
-  stat_summary(fun = mean, geom = "bar") +
-  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", color = "black", width = .2) +
-  ylim (0, 1) +
-  theme_minimal() +
-  labs(
-    title = "Successful Ascents by Label",
-    x = "Label",
-    y = "Proportion of Successful Attempts"
-  ) +
-  theme(legend.position = "none")
-```
-
-
-# LABEL AND GROUP INTERACTION
-```{r, H.2.2}
+# LABEL AND GROUP INTERACTION ON SUCCESS H3
+```{r, H3}
 #successful attempts by label and group
 data_filter %>%
   group_by(label, group) %>%
@@ -383,9 +445,6 @@ data_filter %>%
 
 m2 <- glm(success ~ label * group, data = data_filter, family = binomial)
 summary(m2)
-
-#m2b <- glm(success ~ label * kilter_experience_group, data = data_filter, family = binomial)
-#summary(m2b)
 
 # box plot
 ggplot(data_filter, aes(x = label, y = success, color = group)) +
@@ -402,163 +461,3 @@ ggplot(data_filter, aes(x = label, y = success, color = group)) +
   ylim(0, 1) +
   theme_minimal()
 ```
-
-# PERCEIVED DIFFICULTY ON OBJECTIVE PERFORMANCE
-```{r, H.1.3}
-#successful attempts by pd
-pd_pre_summary <- data_filter %>%
-  group_by(pd_pre) %>%
-  summarise(mean_success = mean(success), .groups = "drop") %>%
-  mutate(time = "pre", pd = pd_pre) %>%
-  select(pd, time, mean_success)
-pd_pre_summary
-
-pd_post_summary <- data_filter %>%
-  group_by(pd_post) %>%
-  summarise(mean_success = mean(success), .groups = "drop") %>%
-  mutate(time = "post", pd = pd_post) %>%
-  select(pd, time, mean_success)
-pd_post_summary
-
-# combine
-pd_both <- bind_rows(pd_pre_summary, pd_post_summary)
-
-ggplot(pd_both, aes(x = pd, y = mean_success, color = time)) +
-  geom_point() +
-  geom_line() +
-  scale_x_continuous(breaks = 1:5) +
-  ylim(0, 1) +
-  labs(
-    title = "Successful Ascents by Perceived Difficulty",
-    x = "Perceived Difficulty",
-    y = "Proportion of Successful Attempts",
-    color = "Time"
-  ) +
-  theme_minimal()
-
-```
-
-```{r}
-m3 <- glm(success ~ pd_pre, data = data_filter, family = binomial)
-summary(m3)
-m4 <- glm(success ~ pd_post, data = data_filter, family = binomial)
-summary(m4) # these 2 are kinda cool, pd_post has significant effect, pre does not
-
-# plot both
-# pd_values <- data.frame(pd = 1:5)
-# predictions_pre <- predict(m3, newdata = data.frame(pd_pre = pd_values$pd), type = "response")
-# predictions_post <- predict(m4, newdata = data.frame(pd_post = pd_values$pd), type = "response")
-# pd_plot_data <- data.frame(
-#   pd = rep(pd_values$pd, 2),
-#   predicted_success = c(predictions_pre, predictions_post),
-#   time = rep(c("Pre", "Post"), each = nrow(pd_values))
-# )
-# ggplot(pd_plot_data, aes(x = pd, y = predicted_success, color = time)) +
-#   geom_point() +
-#   geom_line() +
-#   scale_x_continuous(breaks = 1:5) +
-#   ylim(0, 1) +
-#   labs(
-#     title = "Predicted Probability of Success by Perceived Difficulty",
-#     x = "Perceived Difficulty",
-#     y = "Predicted Probability of Success",
-#     color = "Time"
-#   ) +
-#   theme_minimal()
-```
-
-
-# TRYING TO FIND BEST MODEL (that is not just pd_post alone)
-```{r}
-# m2 <- glm(success ~ label + pd_pre, data = data_filter, family = binomial)
-# m2
-# m3 <- glm(success ~ label * pd_pre, data = data_filter, family = binomial)
-# m3
-# m7 <- glm(success ~ label * group + pd_pre, data = data_filter, family = binomial)
-# summary(m7)
-# m8 <- glmer(success ~ label * baseline_grade + (1 | ID), data = data, family = binomial)
-# m8
-# m9 <- glmer(success ~ label * baseline_grade + pd_pre + (1 | ID), data = data, family = binomial)
-# m9
-m10 <- glm(success ~ label + group + pd_pre + pd_post, data = data_filter, family = binomial)
-summary(m10)
-
-AIC(m1, m2, m3, m4, m10)
-```
-
-```{r}
-# accuracy of m10
-data_filter$predicted_success <- predict(m10, type = "response")
-data_filter$predicted_class <- ifelse(data_filter$predicted_success > 0.5, 1, 0)
-confusion_matrix <- table(data_filter$success, data_filter$predicted_class)
-confusion_matrix
-accuracy <- sum(diag(confusion_matrix2)) / sum(confusion_matrix2)
-accuracy
-
-#inspect misclassifications
-data_filter %>%
-  filter(success != predicted_class) %>%
-  select(ID, label, success, predicted_success, predicted_class, pd_pre, pd_post, group)
-```
-
-
-```{r}
-# predicted probabilities and SEs for m10
-predictions_m10 <- predict(m10, type = "link", se.fit = TRUE)
-
-# convert to probability scale from log-odds
-data_filter$predicted_prob_m10 <- plogis(predictions_m10$fit)
-data_filter$predicted_se_m10 <- predictions_m10$se.fit * dlogis(predictions_m10$fit)
-
-# mean predictions and SEs by label
-pred_points_m10 <- data_filter %>%
-  group_by(label) %>%
-  summarize(
-    mean_pred_m10 = mean(predicted_prob_m10),
-    mean_se_m10 = mean(predicted_se_m10),
-    .groups = "drop"
-  )
-
-ggplot(data_filter, aes(x = label, y = predicted_prob_m10, color = group)) +
-  geom_jitter(width = 0.1, height = 0, alpha = 1, size = 2) +
-  geom_point(data = pred_points_m10, aes(x = label, y = mean_pred_m10), 
-             color = "black", size = 3) +
-  geom_errorbar(data = pred_points_m10, 
-                aes(x = label, y = mean_pred_m10, 
-                    ymin = mean_pred_m10 - mean_se_m10, 
-                    ymax = mean_pred_m10 + mean_se_m10),
-                color = "black", width = 0.1, linewidth = 0.5) +
-
-  labs(x = "Label", 
-       y = "Predicted probability of success", 
-       title = "Probability of Success by Label",
-       subtitle = "Model: m10") +
-  ylim(0, 1) +
-  theme_minimal()
-```
-```{r}
-set.seed(1)
-# split to train and test sets
-train_indices <- sample(1:nrow(data_filter), size = 0.7 * nrow(data_filter))
-train_data <- data_filter[train_indices, ]
-test_data <- data_filter[-train_indices, ]
-# fit model on train set 
-m10_train <- glm(success ~ label + group + pd_pre + pd_post, 
-                 data = train_data, family = binomial)
-# predict on train set
-train_data$predicted_success <- predict(m10_train, newdata = train_data, type = "response")
-train_data$predicted_class <- ifelse(train_data$predicted_success > 0.5, 1, 0)
-confusion_matrix_train <- table(train_data$success, train_data$predicted_class)
-confusion_matrix_train
-accuracy_train <- sum(diag(confusion_matrix_train)) / sum(confusion_matrix_train)
-accuracy_train
-# predict on test set
-test_data$predicted_success <- predict(m10_train, newdata = test_data, type = "response")
-test_data$predicted_class <- ifelse(test_data$predicted_success > 0.5, 1, 0)
-confusion_matrix_test <- table(test_data$success, test_data$predicted_class)
-confusion_matrix_test
-accuracy_test <- sum(diag(confusion_matrix_test)) / sum(confusion_matrix_test)
-accuracy_test
-```
-
-
