@@ -303,8 +303,8 @@ summary(m3)
 
 # plot both
 pd_values <- data.frame(pd = 1:5)
-predictions_pre <- predict(m3, newdata = data.frame(pd_pre = pd_values$pd), type = "response")
-predictions_post <- predict(m4, newdata = data.frame(pd_post = pd_values$pd), type = "response")
+predictions_pre <- predict(m2, newdata = data.frame(pd_pre = pd_values$pd), type = "response")
+predictions_post <- predict(m3, newdata = data.frame(pd_post = pd_values$pd), type = "response")
 pd_plot_data <- data.frame(
   pd = rep(pd_values$pd, 2),
   predicted_success = c(predictions_pre, predictions_post),
